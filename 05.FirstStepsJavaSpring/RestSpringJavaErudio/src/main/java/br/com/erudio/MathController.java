@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.erudio.exceptions.UnsuportedMathOperationException;
+import br.com.erudio.operations.Operations;
 
 @RestController
 public class MathController {
@@ -15,10 +15,7 @@ public class MathController {
 			@PathVariable(value = "numOne") String numOne,
 			@PathVariable(value = "numTwo") String numTwo
 			) throws Exception {
-		if (!isNumeric(numOne) || !isNumeric(numTwo)) {
-			throw new UnsuportedMathOperationException("Please, set a numeric value or two numeric values!");
-		}
-		return convertToDouble(numOne) + convertToDouble(numTwo);		
+		return Operations.sum(numOne, numTwo);		
 	}
 	
 	@RequestMapping(value = "/sub/{numOne}/{numTwo}", method=RequestMethod.GET)
@@ -26,10 +23,7 @@ public class MathController {
 			@PathVariable(value = "numOne") String numOne,
 			@PathVariable(value = "numTwo") String numTwo
 			) throws Exception {
-		if (!isNumeric(numOne) || !isNumeric(numTwo)) {
-			throw new UnsuportedMathOperationException("Please, set a numeric value or two numeric values!");
-		}
-		return convertToDouble(numOne) - convertToDouble(numTwo);		
+		return Operations.sub(numOne, numTwo);		
 	}
 	
 	@RequestMapping(value = "/mult/{numOne}/{numTwo}", method=RequestMethod.GET)
@@ -37,10 +31,7 @@ public class MathController {
 			@PathVariable(value = "numOne") String numOne,
 			@PathVariable(value = "numTwo") String numTwo
 			) throws Exception {
-		if (!isNumeric(numOne) || !isNumeric(numTwo)) {
-			throw new UnsuportedMathOperationException("Please, set a numeric value or numeric two values!");
-		}
-		return convertToDouble(numOne) * convertToDouble(numTwo);		
+		return Operations.mult(numOne, numTwo);		
 	}
 	
 	@RequestMapping(value = "/div/{numOne}/{numTwo}", method=RequestMethod.GET)
@@ -48,53 +39,20 @@ public class MathController {
 			@PathVariable(value = "numOne") String numOne,
 			@PathVariable(value = "numTwo") String numTwo
 			) throws Exception {
-		if (!isNumeric(numOne) || !isNumeric(numTwo)) {
-			throw new UnsuportedMathOperationException("Please, set a numeric value or two numeric values!");
-		}
-		if ("0".equals(numTwo)) {
-			throw new UnsuportedMathOperationException("Please, set a number bigger than 0!");
-		}
-		return convertToDouble(numOne) / convertToDouble(numTwo);		
+		return Operations.div(numOne, numTwo);		
 	}
 	
 	@RequestMapping(value = "/med/{numbers}", method=RequestMethod.GET)
 	public Double med(
 			@PathVariable(value = "numbers") String numbers
 			) throws Exception {
-		if (!numbers.contains(" ")) {
-			throw new UnsuportedMathOperationException("Please, insert multiple numbers separated by spaces between them!");
-		}
-		String[] nums = numbers.split(" ");
-		Double sum = 0D;
-		for(String num : nums) {
-			if (!isNumeric(num)) {
-				throw new UnsuportedMathOperationException("Please, set only numeric values!");
-			}
-			sum += convertToDouble(num);
-		}
-		return sum / nums.length;
+		return Operations.med(numbers);
 	}
 	
 	@RequestMapping(value = "/root/{numOne}", method=RequestMethod.GET)
 	public Double root(
 			@PathVariable(value = "numOne") String numOne
 			) throws Exception {
-		if (!isNumeric(numOne)) {
-			throw new UnsuportedMathOperationException("Please, set a numeric value!");
-		}
-		return Math.sqrt(convertToDouble(numOne));		
-	}
-
-	private Double convertToDouble(String num) {
-		if(num == null) return 0D;
-		String number = num.replaceAll(",", ".");
-		if (isNumeric(number)) return Double.parseDouble(number);
-		return 0D;
-	}
-
-	private boolean isNumeric(String num) {
-		if(num == null) return false;
-		String number = num.replaceAll(",", ".");
-		return number.matches("[-+]?[0-9]*\\.?[0-9]+");
+		return Operations.root(numOne);		
 	}
 }
