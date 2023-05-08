@@ -4,16 +4,23 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id", "FIRST_NAME", "LAST_NAME", "address", "gender", "eMail", "birthDate", })
 public class PersonVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	
+	@JsonProperty("FIRST_NAME")
 	private String firstName;
+	@JsonProperty("LAST_NAME")
 	private String lastName;
 	private String address;
 	private String gender;
+	@JsonIgnore
 	private Date birthDate;
 	private String eMail;
 	
